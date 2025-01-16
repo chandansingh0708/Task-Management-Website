@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Logo from '../Logo/Logo';
 import { GetLocalStorage } from '../AllData/LocalStorage';
 
@@ -9,17 +11,16 @@ const Register = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-    const [id, setId] = useState(''); // Changed from userId to id
+    const [id, setId] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const { Employees } = GetLocalStorage(); // Retrieve current Employees data
+        const { Employees } = GetLocalStorage();
 
-        // Check if id includes 'B322108', ensure it's unique and passwords match
         const userExists = Employees.some(user => user.id === id);
         if (id.includes('B3220') && !userExists && password === confirmPassword) {
             const newUser = {
-                id: id, // Use the provided id
+                id: id,
                 firstName: name,
                 email: email,
                 password: password,
@@ -32,24 +33,26 @@ const Register = (props) => {
                 tasks: []
             };
 
-            const updatedEmployees = [...Employees, newUser]; // Using spread operator to add new user
-
-            localStorage.setItem("Employees", JSON.stringify(updatedEmployees)); // Update localStorage with new user data
-            console.log('Updated Employees Data:', updatedEmployees);
-
+            const updatedEmployees = [...Employees, newUser];
+            localStorage.setItem("Employees", JSON.stringify(updatedEmployees));
             Storagecall(newUser);
+            toast.success("Account created successfully!");
         } else if (userExists) {
-            alert('User ID already exists. Please use a different User ID.');
+            toast.error('User ID already exists. Please use a different User ID.');
+            return
         } else if (password !== confirmPassword) {
-            alert('Password and Confirm Password do not match.');
+            toast.error('Password and Confirm Password do not match.');
+            return
         } else {
-            alert('User ID is incorrect.');
+            toast.error('User ID is incorrect.');
+            return
         }
+
         setName('');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        setId(''); // Reset form fields
+        setId('');
     };
 
     const handleLogin = () => {

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Logo from '../Logo/Logo';
 import { useDataContext } from '../useContext/Context';
 
 const Login = (props) => {
-    const { setAccount, allData, onLogin } = props;
+    const { setAccount, onLogin } = props;
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -25,8 +27,9 @@ const Login = (props) => {
 
         if (user) {
             onLogin(user);
+            toast.success("Login successful!");
         } else {
-            alert('Login failed: Invalid username or password');
+            toast.error("Login failed: Invalid username or password.");
         }
     };
 
